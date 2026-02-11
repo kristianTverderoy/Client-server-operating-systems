@@ -6,6 +6,8 @@ package org.ntnu.serverclient;
  */
 public class App 
 {
+
+    //dette er en test
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
