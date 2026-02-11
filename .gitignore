@@ -1,3 +1,9 @@
+# VS Code
 .vscode
 
-.idea
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+target/
