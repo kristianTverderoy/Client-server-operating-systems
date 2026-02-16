@@ -1,11 +1,10 @@
-package org.ntnu.serverclientMT;
+package org.ntnu.client;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Client {
 
@@ -34,7 +33,7 @@ public class Client {
 
   }
 
-  public void connectToServer(Socket socket) {
+  private void connectToServer(Socket socket) {
 
 
     Scanner scanner = new Scanner(System.in);
@@ -54,11 +53,11 @@ public class Client {
 //     };
 //     this.executors.submit(task);
 
-
-    if (socket.isConnected()) {
+    while (!socket.isClosed()) {
       try {
         String message = scanner.nextLine();
         if (message != null && !message.isEmpty()) {
+          assert this.bufferedWriter != null;
           this.bufferedWriter.write(message);
           this.bufferedWriter.newLine();
           this.bufferedWriter.flush();
@@ -67,20 +66,24 @@ public class Client {
       } catch (IOException e) {
         System.err.println("Socket is not connected");
       }
-    }
-
-    try  {
-      boolean ready = this.bufferedReader.ready();
-      if (ready) {
-        System.out.println(bufferedReader.readLine());
+      try {
+        assert this.bufferedReader != null;
+        String response = this.bufferedReader.readLine();
+        if (response != null) {
+          System.out.println(response);
+        } else {
+          // MultiThreadedServer closed connection
+          break;
+        }
+      } catch (IOException e) {
+        System.err.println("Error reading from server");
+        break;
       }
-    } catch (IOException e) {
-      System.err.println("Buffered reader does not exist");
-
     }
+
+
+
   }
-
-
 }
 
 

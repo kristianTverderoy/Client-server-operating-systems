@@ -1,0 +1,115 @@
+package org.ntnu.ST;
+
+import org.ntnu.util.ArithmeticOperations;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.sql.SQLOutput;
+import java.util.ArrayDeque;
+import java.util.Queue;
+
+public class SingleThreadedServer {
+
+  private final int port;
+  private boolean isOn = false;
+//  private Queue<Socket> connectedClients = new ArrayDeque<>();
+  private Socket socket;
+
+
+  public SingleThreadedServer(int port) {
+    if (port < 0 || port > 65535) {
+      throw new IllegalArgumentException("Invalid port number. Must be between 0 and 65535");
+    }
+    this.port = port;
+  }
+
+  public void run() {
+    if (!isOn) {
+      startServer();
+    }
+
+    try (ServerSocket ss = new ServerSocket(port)) {
+
+      while (isOn) {
+        System.out.println("Server is listening on port" + port);
+        this.socket = ss.accept();
+        System.out.println("New client connected: " + this.socket.getInetAddress().getHostAddress());
+        handleClient();
+        socket.close();
+      }
+    } catch (IOException e) {
+      System.err.println("Socket error");
+    }
+
+
+  }
+
+
+
+  private synchronized void startServer() {
+    this.isOn = true;
+  }
+
+
+  private void handleClient() {
+    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))) {
+
+    String messageFromClient = bufferedReader.readLine();
+
+    String[] parts = messageFromClient.split(" ");
+    double a = Double.parseDouble(parts[0]);
+    double b = Double.parseDouble(parts[2]);
+
+
+     switch (parts[1]) {
+       case "+" : {
+         double addResult = ArithmeticOperations.add(a, b);
+         String addResultString = String.valueOf(addResult);
+         bufferedWriter.write(addResultString);
+         bufferedWriter.newLine();
+         bufferedWriter.flush();
+         break;
+       }
+
+       case "-" : {
+         double addResult = ArithmeticOperations.sub(a, b);
+         String addResultString = String.valueOf(addResult);
+         bufferedWriter.write(addResultString);
+         bufferedWriter.newLine();
+         bufferedWriter.flush();
+         break;
+       }
+
+       case "*" : {
+         double addResult = ArithmeticOperations.mul(a, b);
+         String addResultString = String.valueOf(addResult);
+         bufferedWriter.write(addResultString);
+         bufferedWriter.newLine();
+         bufferedWriter.flush();
+         break;
+       }
+
+       case "/" : {
+         double addResult = ArithmeticOperations.div(a, b);
+         String addResultString = String.valueOf(addResult);
+         bufferedWriter.write(addResultString);
+         bufferedWriter.newLine();
+         bufferedWriter.flush();
+         break;
+       }
+     }
+
+
+
+    } catch (IOException e) {
+      System.err.println("No socket input/output stream");
+    }
+
+
+    }
+
+
+}
+
