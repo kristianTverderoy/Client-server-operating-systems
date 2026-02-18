@@ -13,8 +13,10 @@ public class SingleThreadedServer {
 
   private final int port;
   private boolean isOn = false;
-//  private Queue<Socket> connectedClients = new ArrayDeque<>();
+  //  private Queue<Socket> connectedClients = new ArrayDeque<>();
   private Socket socket;
+  private BufferedReader br;
+  private BufferedWriter bw;
 
 
   public SingleThreadedServer(int port) {
@@ -33,10 +35,14 @@ public class SingleThreadedServer {
 
       while (isOn) {
         System.out.println("Server is listening on port" + port);
-        this.socket = ss.accept();
+        if (this.socket == null) {
+          this.socket = ss.accept();
+          this.br = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+          this.bw = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+        }
         System.out.println("New client connected: " + this.socket.getInetAddress().getHostAddress());
         handleClient();
-        socket.close();
+//        socket.close();
       }
     } catch (IOException e) {
       System.err.println("Socket error");
@@ -46,69 +52,75 @@ public class SingleThreadedServer {
   }
 
 
-
   private synchronized void startServer() {
     this.isOn = true;
   }
 
 
   private void handleClient() {
-    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))) {
+    try {
 
-    String messageFromClient = bufferedReader.readLine();
+      String messageFromClient = this.br.readLine();
 
-    String[] parts = messageFromClient.split(" ");
-    double a = Double.parseDouble(parts[0]);
-    double b = Double.parseDouble(parts[2]);
+      if (!messageFromClient.equals("exit")) {
+        String[] parts = messageFromClient.split(" ");
+        double a = Double.parseDouble(parts[0]);
+        double b = Double.parseDouble(parts[2]);
 
+        switch (parts[1]) {
+          case "+": {
+            double addResult = ArithmeticOperations.add(a, b);
+            String addResultString = String.valueOf(addResult);
+            this.bw.write(addResultString);
+            bw.newLine();
+            bw.flush();
+            break;
+          }
 
-     switch (parts[1]) {
-       case "+" : {
-         double addResult = ArithmeticOperations.add(a, b);
-         String addResultString = String.valueOf(addResult);
-         bufferedWriter.write(addResultString);
-         bufferedWriter.newLine();
-         bufferedWriter.flush();
-         break;
-       }
+          case "-": {
+            double addResult = ArithmeticOperations.sub(a, b);
+            String addResultString = String.valueOf(addResult);
+            bw.write(addResultString);
+            bw.newLine();
+            bw.flush();
+            break;
+          }
 
-       case "-" : {
-         double addResult = ArithmeticOperations.sub(a, b);
-         String addResultString = String.valueOf(addResult);
-         bufferedWriter.write(addResultString);
-         bufferedWriter.newLine();
-         bufferedWriter.flush();
-         break;
-       }
+          case "*": {
+            double addResult = ArithmeticOperations.mul(a, b);
+            String addResultString = String.valueOf(addResult);
+            bw.write(addResultString);
+            bw.newLine();
+            bw.flush();
+            break;
+          }
 
-       case "*" : {
-         double addResult = ArithmeticOperations.mul(a, b);
-         String addResultString = String.valueOf(addResult);
-         bufferedWriter.write(addResultString);
-         bufferedWriter.newLine();
-         bufferedWriter.flush();
-         break;
-       }
+          case "/": {
+            double addResult = ArithmeticOperations.div(a, b);
+            String addResultString = String.valueOf(addResult);
+            bw.write(addResultString);
+            bw.newLine();
+            bw.flush();
+            break;
+          }
 
-       case "/" : {
-         double addResult = ArithmeticOperations.div(a, b);
-         String addResultString = String.valueOf(addResult);
-         bufferedWriter.write(addResultString);
-         bufferedWriter.newLine();
-         bufferedWriter.flush();
-         break;
-       }
-     }
-
-
+        }
+      } else if (messageFromClient.equals("exit")) {
+        {
+          socket.close();
+          this.socket = null;
+          this.br = null;
+          this.bw = null;
+        }
+      }
 
     } catch (IOException e) {
       System.err.println("No socket input/output stream");
     }
 
 
-    }
+
+  }
 
 
 }

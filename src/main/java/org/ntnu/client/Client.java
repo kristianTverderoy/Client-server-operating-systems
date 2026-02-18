@@ -40,6 +40,7 @@ public class Client {
     try {
       this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
     } catch (IOException e) {
       System.err.println("Could not connect to server");
     }
@@ -54,37 +55,55 @@ public class Client {
 //     this.executors.submit(task);
 
     while (!socket.isClosed()) {
-      try {
+
+
         String message = scanner.nextLine();
-        if (message != null && !message.isEmpty()) {
+
+//      String message = "exit";
+//      for (int i = 0; i < 5; i++) {
+//        message = "2 + 2";
+//        if (i == 4) {
+          if (message.equalsIgnoreCase("exit")){
+          try {
+            bufferedWriter.write("exit");
+            bufferedWriter.flush();
+            this.socket.close();
+            break;
+          } catch (IOException e) {
+            System.err.println("We dont associate with that server anymore.");
+          }
+        }
+
+        try {
+
           assert this.bufferedWriter != null;
           this.bufferedWriter.write(message);
           this.bufferedWriter.newLine();
           this.bufferedWriter.flush();
-        }
 
-      } catch (IOException e) {
-        System.err.println("Socket is not connected");
-      }
-      try {
-        assert this.bufferedReader != null;
-        String response = this.bufferedReader.readLine();
-        if (response != null) {
-          System.out.println(response);
-        } else {
-          // MultiThreadedServer closed connection
+
+        } catch (IOException e) {
+          System.err.println("Socket is not connected");
+        }
+        try {
+          assert this.bufferedReader != null;
+          String response = this.bufferedReader.readLine();
+          if (response != null) {
+            System.out.println(response);
+          } else {
+            // MultiThreadedServer closed connection
+            break;
+          }
+        } catch (IOException e) {
+          System.err.println("Error reading from server");
           break;
         }
-      } catch (IOException e) {
-        System.err.println("Error reading from server");
-        break;
       }
     }
 
 
-
   }
-}
+
 
 
 
