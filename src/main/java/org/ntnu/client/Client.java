@@ -57,16 +57,17 @@ public class Client {
     while (!socket.isClosed()) {
 
 
-        String message = scanner.nextLine();
+//        String message = scanner.nextLine();
 
-//      String message = "exit";
-//      for (int i = 0; i < 5; i++) {
-//        message = "2 + 2";
-//        if (i == 4) {
-          if (message.equalsIgnoreCase("exit")){
+      String message = "exit";
+      for (int i = 0; i < 3; i++) {
+        message = "2 + 2";
+        if (i == 2) {
+//          if (message.equalsIgnoreCase("exit")){
+//          message = "exit";
           try {
-            bufferedWriter.write("exit");
-            bufferedWriter.flush();
+//            bufferedWriter.write("exit");
+//            bufferedWriter.flush();
             this.socket.close();
             break;
           } catch (IOException e) {
@@ -103,6 +104,7 @@ public class Client {
 
 
   }
+}
 
 
 
