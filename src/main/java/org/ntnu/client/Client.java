@@ -8,13 +8,16 @@ import java.util.concurrent.ExecutorService;
 
 public class Client {
 
+  public static void main(String[] args) {
+    new Client(8080, "127.0.0.1");
+  }
+
   private int port;
   private String host;
   private Socket socket;
   private BufferedReader bufferedReader;
   private BufferedWriter bufferedWriter;
   private ExecutorService executors;
-
 
   public Client(int port, String host) {
 
@@ -24,17 +27,15 @@ public class Client {
       this.socket = new Socket(host, port);
       connectToServer(this.socket);
     } catch (UnknownHostException e) {
-      //TODO fill in exceptions
+      // TODO fill in exceptions
 
     } catch (IOException e) {
 
     }
 
-
   }
 
   private void connectToServer(Socket socket) {
-
 
     Scanner scanner = new Scanner(System.in);
     try {
@@ -45,29 +46,28 @@ public class Client {
       System.err.println("Could not connect to server");
     }
 
-//     this.executors = Executors.newFixedThreadPool(10);
-//     Runnable task = () -> {
-//       while (socket.isConnected()) {
-//         bufferedWriter.write();
-//         bufferedReader.
-//       }
-//     };
-//     this.executors.submit(task);
+    // this.executors = Executors.newFixedThreadPool(10);
+    // Runnable task = () -> {
+    // while (socket.isConnected()) {
+    // bufferedWriter.write();
+    // bufferedReader.
+    // }
+    // };
+    // this.executors.submit(task);
 
     while (!socket.isClosed()) {
 
-
-//        String message = scanner.nextLine();
+      // String message = scanner.nextLine();
 
       String message = "exit";
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 5; i++) {
         message = "2 + 2";
-        if (i == 2) {
-//          if (message.equalsIgnoreCase("exit")){
-//          message = "exit";
+        if (i == 4) {
+          // if (message.equalsIgnoreCase("exit")){
+          // message = "exit";
           try {
-//            bufferedWriter.write("exit");
-//            bufferedWriter.flush();
+            // bufferedWriter.write("exit");
+            // bufferedWriter.flush();
             this.socket.close();
             break;
           } catch (IOException e) {
@@ -81,7 +81,6 @@ public class Client {
           this.bufferedWriter.write(message);
           this.bufferedWriter.newLine();
           this.bufferedWriter.flush();
-
 
         } catch (IOException e) {
           System.err.println("Socket is not connected");
@@ -102,13 +101,5 @@ public class Client {
       }
     }
 
-
   }
 }
-
-
-
-
-
-
-

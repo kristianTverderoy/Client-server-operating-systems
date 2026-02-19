@@ -8,6 +8,8 @@ public class ClientMain {
     for (int i = 0; i < 10; i++) {
       Client client = new Client(8080, "127.0.0.1");
     }
+
+
     System.out.println("pepe");
 
     long endTime = System.nanoTime();

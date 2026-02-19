@@ -5,19 +5,15 @@ import org.ntnu.util.ArithmeticOperations;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLOutput;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class SingleThreadedServer {
 
   private final int port;
   private boolean isOn = false;
-  //  private Queue<Socket> connectedClients = new ArrayDeque<>();
+  // private Queue<Socket> connectedClients = new ArrayDeque<>();
   private Socket socket;
   private BufferedReader br;
   private BufferedWriter bw;
-
 
   public SingleThreadedServer(int port) {
     if (port < 0 || port > 65535) {
@@ -42,69 +38,63 @@ public class SingleThreadedServer {
         }
         System.out.println("New client connected: " + this.socket.getInetAddress().getHostAddress());
         handleClient();
-//        socket.close();
+        // socket.close();
       }
     } catch (IOException e) {
       System.err.println("Socket error");
     }
 
-
   }
-
 
   private synchronized void startServer() {
     this.isOn = true;
   }
 
-
   private void handleClient() {
+
     try {
 
       String messageFromClient = this.br.readLine();
+      if (messageFromClient != null) {
+
 
       if (!messageFromClient.equals("exit")) {
         String[] parts = messageFromClient.split(" ");
         double a = Double.parseDouble(parts[0]);
         double b = Double.parseDouble(parts[2]);
+        String messageResponse = "You didnt follow the correct pattern to write to the server.";
 
         switch (parts[1]) {
           case "+": {
             double addResult = ArithmeticOperations.add(a, b);
-            String addResultString = String.valueOf(addResult);
-            this.bw.write(addResultString);
-            bw.newLine();
-            bw.flush();
+            messageResponse = String.valueOf(addResult);
             break;
           }
-
           case "-": {
             double addResult = ArithmeticOperations.sub(a, b);
-            String addResultString = String.valueOf(addResult);
-            bw.write(addResultString);
-            bw.newLine();
-            bw.flush();
+            messageResponse = String.valueOf(addResult);
             break;
           }
-
           case "*": {
             double addResult = ArithmeticOperations.mul(a, b);
-            String addResultString = String.valueOf(addResult);
-            bw.write(addResultString);
-            bw.newLine();
-            bw.flush();
+            messageResponse = String.valueOf(addResult);
             break;
           }
-
           case "/": {
             double addResult = ArithmeticOperations.div(a, b);
-            String addResultString = String.valueOf(addResult);
-            bw.write(addResultString);
-            bw.newLine();
-            bw.flush();
+            messageResponse = String.valueOf(addResult);
             break;
           }
-
         }
+        try {
+          Thread.sleep(2000);
+          this.bw.write(messageResponse);
+          this.bw.newLine();
+          bw.flush();
+        } catch (InterruptedException e) {
+          System.err.println("Could not sleep the current thread.");
+        }
+
       } else if (messageFromClient.equals("exit")) {
         {
           socket.close();
@@ -113,15 +103,11 @@ public class SingleThreadedServer {
           this.bw = null;
         }
       }
-
+      }
     } catch (IOException e) {
       System.err.println("No socket input/output stream");
     }
 
-
-
   }
 
-
 }
-
