@@ -1,4 +1,4 @@
-package org.ntnu.serverclient;
+package org.ntnu.util;
 
 public class ArithmeticOperations {
 

@@ -1,9 +1,122 @@
-# VS Code
-.vscode
+# ========================
+# Java
+# ========================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
 
+# ========================
+# Maven
+# ========================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ========================
 # IntelliJ IDEA
+# ========================
 .idea/
 *.iml
 *.iws
+*.ipr
+out/
+.idea_modules/
 
-target/
+# ========================
+# VS Code
+# ========================
+.vscode/
+*.code-workspace
+.history/
+
+# ========================
+# Eclipse
+# ========================
+.eclipse/
+.classpath
+.project
+.settings/
+bin/
+.factorypath
+
+# ========================
+# NetBeans
+# ========================
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ========================
+# OS Files - Linux
+# ========================
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================
+# OS Files - macOS
+# ========================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ========================
+# OS Files - Windows
+# ========================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ========================
+# Logs & Temp Files
+# ========================
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+logs/
+log/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.*
+!.env.example
+*.properties.local
+secrets/
+credentials/
+
+# ========================
+# Test Output
+# ========================
+surefire-reports/
+failsafe-reports/
+test-output/
+coverage/
+*.exec
