@@ -35,8 +35,9 @@ public class SingleThreadedServer {
           this.socket = ss.accept();
           this.br = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
           this.bw = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+          System.out.println("New client connected: " + this.socket.getInetAddress().getHostAddress());
         }
-        System.out.println("New client connected: " + this.socket.getInetAddress().getHostAddress());
+
         handleClient();
         // socket.close();
       }

@@ -63,11 +63,10 @@ public class Client {
       for (int i = 0; i < 5; i++) {
         message = "2 + 2";
         if (i == 4) {
-          // if (message.equalsIgnoreCase("exit")){
-          // message = "exit";
+          message = "exit";
           try {
-            // bufferedWriter.write("exit");
-            // bufferedWriter.flush();
+            bufferedWriter.write("exit");
+            bufferedWriter.flush();
             this.socket.close();
             break;
           } catch (IOException e) {
@@ -75,31 +74,32 @@ public class Client {
           }
         }
 
-        try {
+          try {
 
-          assert this.bufferedWriter != null;
-          this.bufferedWriter.write(message);
-          this.bufferedWriter.newLine();
-          this.bufferedWriter.flush();
+            assert this.bufferedWriter != null;
+            this.bufferedWriter.write(message);
+            this.bufferedWriter.newLine();
+            this.bufferedWriter.flush();
 
-        } catch (IOException e) {
-          System.err.println("Socket is not connected");
-        }
-        try {
-          assert this.bufferedReader != null;
-          String response = this.bufferedReader.readLine();
-          if (response != null) {
-            System.out.println(response);
-          } else {
-            // MultiThreadedServer closed connection
+          } catch (IOException e) {
+            System.err.println("Socket is not connected");
+          }
+          try {
+            assert this.bufferedReader != null;
+            String response = this.bufferedReader.readLine();
+            if (response != null) {
+              System.out.println(response);
+            } else {
+              // MultiThreadedServer closed connection
+              break;
+            }
+          } catch (IOException e) {
+            System.err.println("Error reading from server");
             break;
           }
-        } catch (IOException e) {
-          System.err.println("Error reading from server");
-          break;
         }
       }
-    }
 
+    }
   }
-}
+

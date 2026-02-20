@@ -82,47 +82,64 @@ public class MultiThreadedServer {
       while (!socket.isClosed()) {
         String messageFromClient = bufferedReader.readLine();
         if (messageFromClient != null) {
-          String[] parts = messageFromClient.split(" ");
-          double a = Double.parseDouble(parts[0]);
-          double b = Double.parseDouble(parts[2]);
+          if (!messageFromClient.equals("exit")) {
+            String[] parts = messageFromClient.split(" ");
+            double a = Double.parseDouble(parts[0]);
+            double b = Double.parseDouble(parts[2]);
 
-          String messageResponse;
+            String messageResponse;
 
-          switch (parts[1]) {
-            case "+": {
-              double addResult = ArithmeticOperations.add(a, b);
-              messageResponse = String.valueOf(addResult);
-              break;
+            switch (parts[1]) {
+              case "+": {
+                double addResult = ArithmeticOperations.add(a, b);
+                messageResponse = String.valueOf(addResult);
+                break;
+              }
+              case "-": {
+                double addResult = ArithmeticOperations.sub(a, b);
+                messageResponse = String.valueOf(addResult);
+                break;
+              }
+              case "*": {
+                double addResult = ArithmeticOperations.mul(a, b);
+                messageResponse = String.valueOf(addResult);
+                break;
+              }
+              case "/": {
+                double addResult = ArithmeticOperations.div(a, b);
+                messageResponse = String.valueOf(addResult);
+                break;
+              }
+
+              case "exit": {
+                try {
+                  messageResponse = "Goodbye!";
+                  bufferedWriter.write(messageResponse);
+                  bufferedWriter.newLine();
+                  bufferedWriter.flush();
+                  socket.close();
+                  break;
+                } catch (IOException e) {
+                  System.err.println("Could not close the socket connection.");
+                }
+              }
+              default: {
+                messageResponse = "You didnt follow the correct pattern to write to the server.";
+                break;
+              }
             }
-            case "-": {
-              double addResult = ArithmeticOperations.sub(a, b);
-              messageResponse = String.valueOf(addResult);
-              break;
+
+            try {
+              Thread.sleep(2000);
+              bufferedWriter.write(messageResponse);
+              bufferedWriter.newLine();
+              bufferedWriter.flush();
+            } catch (InterruptedException e) {
+              System.err.println("Could not sleep the current thread.");
             }
-            case "*": {
-              double addResult = ArithmeticOperations.mul(a, b);
-              messageResponse = String.valueOf(addResult);
-              break;
-            }
-            case "/": {
-              double addResult = ArithmeticOperations.div(a, b);
-              messageResponse = String.valueOf(addResult);
-              break;
-            }
-            default: {
-              messageResponse = "You didnt follow the correct pattern to write to the server.";
-              break;
-            }
+
           }
 
-          try {
-            Thread.sleep(1000);
-            bufferedWriter.write(messageResponse);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-          } catch (InterruptedException e) {
-            System.err.println("Could not sleep the current thread.");
-          }
         }
       }
     } catch (IOException e) {
